@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import TodoForm from './components/TodoForm'
+import TodoList from './components/TodoList'
+
+import { connect } from 'react-redux'
+
+import {asyncAddTodo} from "./actions";
+
+class App extends React.Component {
+
+  render() {
+      const { todoList, handleAddTodo } = this.props;
+
+      return (
+          <div className="App">
+              <TodoForm onAddTodo={handleAddTodo} />
+              <TodoList todoList={todoList}/>
+          </div>
+      )
+  }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  todoList: state.todo.todoList
+})
+
+const mapDispatchToProps = dispatch => ({
+  handleAddTodo: (todoText) => {
+      console.log(todoText);
+      return dispatch(asyncAddTodo(todoText))
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
